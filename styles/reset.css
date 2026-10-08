@@ -1,0 +1,125 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	text-decoration: none;
+	border: none;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	line-height: 1;
+	overflow-x: hidden;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+	display: block;
+}
+
+menu {
+	list-style: none;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+	cursor: pointer;
+}
+
+button,
+input,
+textarea {
+	font: inherit;
+	color: inherit;
+}
+
+button,
+input[type='button'],
+input[type="reset"],
+input[type='submit'] {
+	cursor: pointer;
+	-webkit-appearance: button;
+	appearance: button;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  padding: 0; 
+}
+
+img {
+	width: 100%;
+	object-fit: contain;
+}
+
+summary {
+	display: list-item;
+}
+
+/* % Classes genéricas */
+
+.blur {
+	filter: blur(5px);
+}
+
+.blurbg {
+	backdrop-filter: blur(5px);
+}
+
+.circle {
+	border-radius: 50%;
+	width: var(--tamanho);
+	height: var(--tamanho);
+}	
+
+.error {
+	color: red;
+}
+ 
+.flex-center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}		
+
+.hidden {
+	display: none;
+}
+
+.square {
+	width: var(--size);
+	height: var(--size);
+}		
+
+.trans-ease {
+	transition: all 0.6s ease-in-out;
+}
+
+.transparent {
+	opacity: 0;
+}
+
+.flex-row {
+	display: flex;
+    flex-flow: row nowrap;
+	align-items: center;
+    gap: 1em;
+}

@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&family=Archivo+Narrow:ital,wght@0,400..700;1,400..700&family=Crafty+Girls&display=swap');
+@import url('./reset.css');
+
+:root {
+	--color1: hsl(36, 100%, 67%);
+	--color1-light: hsl(36, 100%, 75%);
+	--color1-lighter: hsl(37, 100%, 92%);
+	--color2: hsl(120, 90%, 40%);
+	--color2-dark: hsl(120, 40%, 35%);
+	--color2-lighter: hsl(120, 100%, 93%);
+	--color3: hsl(124, 7%, 45%);
+	--color3-light: hsl(124, 7%, 72%);
+	--color3-lighter: hsl(124, 7%, 80%);
+
+	--header-height: 6rem;
+}
+
+body {
+	background-color: var(--color2-lighter);
+	font-family: 'Archivo';
+	font-size: 14pt;
+	color: var(--color3);
+
+	::selection {
+		background-color: var(--color2);
+		color: #fff;
+	}
+}
+
+body > header {
+	background-color: var(--color2);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 2rem;
+	height: var(--header-height);
+}
+
+.page-title {
+	font-size: 3rem;
+	font-family: 'Crafty Girls';
+	color: var(--color1-light);
+	font-weight: bold;
+}
+
+.top-search {
+	display: flex;
+	overflow: hidden;
+	border-radius: 0.5rem;
+
+	&.highlight {
+		border: 3px solid var(--color1-light);
+	}
+
+	input {
+		padding: 0.5rem;
+
+		&::placeholder {
+			color: var(--color3-lighter);
+		}
+
+		&:focus,
+		&:focus-visible,
+		&:focus-within {
+			border: none;
+			outline: none;
+		}
+	}
+
+	button {
+		background-color: var(--color1);
+		padding: 0.5rem;
+	}
+}
+
+.header-border {
+	--height: 16px;
+	position: absolute;
+	top: var(--header-height);
+	transform: translateY(-50%);
+	width: 100%;
+	height: var(--height);
+	background-image: linear-gradient(
+		to right,
+		var(--color1-lighter) 12px,
+		transparent 12px
+	);
+	background-size: 18px 3px;
+	background-repeat: repeat-x;
+	background-position: left center;
+}
+
+body > main {
+    min-height: 50dvh;
+    width: min(900px, 90dvw);
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+
+    h2 {
+        font-family: 'Archivo Narrow';
+        font-size: 1.25rem;
+        margin-bottom: 1em;
+        color: var(--color2-dark);
+    }
+}
+
+.recipe-wrapper {
+    display: flex;
+    gap: 2rem;
+}
+
+.recipe {
+    position: relative;
+    width: 275px;
+    background-color: white;
+    box-shadow: 4px 4px 4px hsla(0, 0%, 0%, 10%);
+    padding: .75rem;
+
+    img {
+        width: 250px;
+        height: 250px;
+        object-fit: cover;
+        margin-bottom: .75rem;
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        gap: .25rem;
+        
+        h3 {
+            color:var(--color1);
+        }
+        
+        p {
+            font-size: 1rem;
+            line-height: 1.2;
+        }
+    }
+
+    .adhesive {
+        background-color: var(--color1-lighter);
+        height: 30px;
+        width: 100px;
+        position: absolute;
+        top: 6px;
+        left: -20px;
+        z-index: 10;
+        transform: rotate(-35deg);
+        
+        &.right {
+            left: unset;
+            right: -20px;
+            transform: rotate(35deg);
+        }
+    }
+}
+
+body > footer {
+    display: flex;
+    align-items: center;
+    height: calc(var(--header-height) / 1.5);
+    padding: 2rem;
+    font-size: 1rem;
+}
