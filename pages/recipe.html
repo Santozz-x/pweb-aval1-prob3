@@ -2,33 +2,28 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="author" content="Renan Santos" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Livro de Receitas</title>
-    <meta name="description" content="">
+    <title>Receita — Livro de Receitas</title>
+    <meta name="description" content="Detalhes da receita: ingredientes, quantidades e modo de preparo.">
     <link rel="stylesheet" href="../styles/home.css">
     <link rel="stylesheet" href="../styles/recipe.css">
     <link rel="icon" href="../assets/icon_142001.svg">
-    <script src="../scripts/recipe.js" defer></script>
+    <script type="module" src="../scripts/recipe.js"></script>
 </head>
 <body>
     <header>
-        <h1 class="page-title">Livro de Receitas</h1>
-
-        <label class="top-search">
-            <input type="text" placeholder="Busque uma receita" />
-            <button>
-                <img src="./assets/lu-search.svg" />
-            </button>
-        </label>
+        <h1 class="page-title"><a href="../index.html">Livro de Receitas</a></h1>
     </header>
     <div class="header-border"></div>
+
     <main>
-       
+        <a class="back-link" href="../index.html">← Voltar às receitas</a>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+        <article id="recipe" class="recipe-detail"></article>
     </main>
+
     <footer>
-        <p>@206 RenanSantos7 Jeiel</p>
+        <p>© 2026 Renan Santos e Jeiel</p>
     </footer>
 </body>
 </html>

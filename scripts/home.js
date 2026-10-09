@@ -1,71 +1,106 @@
-import data from '../data.mock.json' with { type: 'json' };
+import { searchRecipes } from './api.js';
+import { $, createElement, createRecipeImage } from './dom.js';
 
-const main = $('main');
+const PAGE_SIZE = 12;
+const MAX_TEXT_LENGTH = 60;
 
-const categories = data.map(recipe => recipe.tipo);
-const categoriesSet = new Set(categories);
+const form = $('#search-form');
+const textInput = $('#search-text');
+const typeSelect = $('#search-type');
+const status = $('#status');
+const results = $('#results');
+const pagination = $('#pagination');
+const prevButton = $('#prev-button');
+const nextButton = $('#next-button');
+const pageInfo = $('#page-info');
 
-categoriesSet.forEach(catg => {
-	const categoryName = capitalize(catg);
-	const recipes = data.filter(rec => rec.tipo === catg);
-	main.append(createSection(categoryName, recipes));
+let currentRecipes = [];
+let page = 1;
+let requestId = 0;
+
+form.addEventListener('submit', event => {
+	event.preventDefault();
+	search();
 });
 
-// ---------------------------------------------
+prevButton.addEventListener('click', () => goToPage(page - 1));
+nextButton.addEventListener('click', () => goToPage(page + 1));
 
-function $(key) {
-	return document.querySelector(key);
+search();
+
+async function search() {
+	const text = textInput.value.trim();
+	const type = typeSelect.value;
+
+	if (text.length > MAX_TEXT_LENGTH) {
+		showStatus(`O termo deve ter no máximo ${MAX_TEXT_LENGTH} caracteres.`, 'error');
+		return;
+	}
+
+	const id = ++requestId;
+	clearResults();
+	showStatus('Carregando receitas...', 'loading');
+	form.setAttribute('aria-busy', 'true');
+
+	try {
+		const recipes = await searchRecipes({ text, type });
+		if (id !== requestId) return; // a newer search has already started
+
+		currentRecipes = recipes;
+		if (recipes.length === 0) {
+			showStatus('Nenhuma receita encontrada. Tente outro termo ou tipo.', 'empty');
+			return;
+		}
+
+		showStatus(`${recipes.length} ${recipes.length === 1 ? 'receita encontrada' : 'receitas encontradas'}.`);
+		goToPage(1, false);
+	} catch (error) {
+		if (id !== requestId) return;
+		showStatus(`${error.message} Tente novamente.`, 'error');
+	} finally {
+		if (id === requestId) form.removeAttribute('aria-busy');
+	}
 }
 
-function createElement(tag, className, content) {
-	const el = document.createElement(tag);
-	if (className) el.classList.add(className);
-	if (content) el.textContent = content;
-
-	return el;
+function clearResults() {
+	results.replaceChildren();
+	currentRecipes = [];
+	page = 1;
+	pagination.hidden = true;
 }
 
-function createRecipeElement(recipe) {
-	const article = createElement('section', 'recipe');
+function goToPage(newPage, scroll = true) {
+	const totalPages = Math.ceil(currentRecipes.length / PAGE_SIZE);
+	page = Math.min(Math.max(newPage, 1), totalPages);
 
-	const img = createElement('img');
-	img.src = recipe.link_imagem;
-	img.alt = recipe.receita;
-	article.append(img);
+	const start = (page - 1) * PAGE_SIZE;
+	results.replaceChildren(...currentRecipes.slice(start, start + PAGE_SIZE).map(createCard));
 
-	const divInfo = createElement('div', 'info');
-	article.append(divInfo);
-	const h3 = createElement('h3', null, recipe.receita);
-	divInfo.append(h3);
+	pagination.hidden = totalPages <= 1;
+	pageInfo.textContent = `Página ${page} de ${totalPages}`;
+	prevButton.disabled = page === 1;
+	nextButton.disabled = page === totalPages;
 
-	const p = createElement('p');
-	const strong = createElement('strong', null, 'Ingredientes:');
-	p.append(strong);
-	const ingredientes =
-		recipe.IngredientesBase?.flatMap(item => item.nomesIngrediente).join(
-			', ',
-		) ?? '';
-	p.append(` ${ingredientes}`);
-	divInfo.append(p);
-
-	return article;
+	if (scroll) status.scrollIntoView({ behavior: 'smooth' });
 }
 
-function createSection(title, data) {
-	const section = createElement('section', 'recipe-group');
-	const titleElem = createElement('h2');
-	titleElem.textContent = title;
-	section.append(titleElem);
-	const div = createElement('div', 'recipe-wrapper');
-	section.append(div);
+function createCard(recipe) {
+	const li = createElement('li', 'recipe-card');
+	const link = createElement('a');
+	link.href = `pages/recipe.html?id=${encodeURIComponent(recipe.id)}`;
 
-	data.forEach(recipe => {
-		div.append(createRecipeElement(recipe));
-	});
+	link.append(createRecipeImage(recipe, 'recipe-image'));
 
-	return section;
+	const info = createElement('div', 'info');
+	info.append(createElement('h3', null, recipe.name));
+	if (recipe.typeLabel) info.append(createElement('p', 'tag', recipe.typeLabel));
+	link.append(info);
+
+	li.append(link);
+	return li;
 }
 
-function capitalize(string) {
-	return string[0].toUpperCase() + string.slice(1);
+function showStatus(message, kind = '') {
+	status.textContent = message;
+	status.className = `status ${kind}`.trim();
 }

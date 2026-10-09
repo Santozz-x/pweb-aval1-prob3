@@ -9,7 +9,7 @@ Aplicação web para pesquisa e consulta de receitas culinárias. O projeto foi 
 
 ## Funcionalidades
 
-- Pesquisa de receitas pelo nome ou descrição.
+- Pesquisa de receitas pelo nome.
 - Consulta de receitas por tipo: doce, salgado ou agridoce.
 - Exibição dos resultados em cartões com nome, imagem e classificação.
 - Visualização dos detalhes de uma receita selecionada.
@@ -33,25 +33,27 @@ A aplicação utiliza somente as rotas públicas de consulta da API. Não há ba
 
 | Finalidade | Método e rota |
 | --- | --- |
-| Listar receitas | `GET /receitas/todas?page=1&limit=10` |
-| Pesquisar por nome ou descrição | `GET /receitas/descricao?descricao=bolo&page=1&limit=10` |
-| Consultar ingredientes de uma receita | `GET /receitas/ingredientes/:id` |
+| Listar receitas | `GET /receitas/todas?page=1&limit=100` |
+| Pesquisar por nome ou descrição | `GET /receitas/descricao?descricao=bolo&page=1&limit=100` |
+| Consultar por tipo (doce, salgado ou agridoce) | `GET /receitas/tipo/:tipo` |
+| Detalhar uma receita | `GET /receitas/:id` |
 
-A resposta paginada possui os resultados no campo `data` e informações de paginação no campo `meta`. Cada receita pode conter, entre outros, os campos
-`id`, `receita`, `ingredientes`, `modo_preparo`, `link_imagem` e `tipo`.
+As rotas paginadas retornam os resultados no campo `items` e a paginação em `meta`; a rota por tipo retorna uma lista simples. Cada receita contém `id`, `receita`, `ingredientes` (texto com quantidades), `modo_preparo`, `link_imagem` e `tipo`. Quando pesquisa por nome e tipo são usados juntos, o tipo filtra no navegador o resultado da pesquisa.
+
+A API não fornece região/origem da receita, portanto a classificação exibida é o tipo (categoria).
 
 Exemplo de requisição:
 
 ```js
 const response = await fetch(
-  'https://api-receitas-pi.vercel.app/receitas/descricao?descricao=bolo&page=1&limit=10'
+  'https://api-receitas-pi.vercel.app/receitas/descricao?descricao=bolo&page=1&limit=100'
 );
 
 if (!response.ok) {
   throw new Error('Não foi possível consultar as receitas.');
 }
 
-const result = await resposta.json();
+const result = await response.json();
 ```
 
 As rotas de login, criação, exclusão e geração de receitas com IA não fazem parte desta aplicação, pois exigem autenticação ou não são necessárias para o escopo do catálogo.
@@ -72,11 +74,18 @@ Não são utilizados React, Vue, Angular, Svelte, backend próprio, banco de dad
 .
 ├── assets/
 │   ├── icon_142001.svg
+│   ├── no-image.svg
 │   └── lu-search.svg
+├── pages/
+│   └── recipe.html
 ├── scripts/
-│   └── home.js
+│   ├── api.js
+│   ├── dom.js
+│   ├── home.js
+│   └── recipe.js
 ├── styles/
 │   ├── home.css
+│   ├── recipe.css
 │   └── reset.css
 ├── index.html
 └── README.md
@@ -86,9 +95,9 @@ Não são utilizados React, Vue, Angular, Svelte, backend próprio, banco de dad
 
 Como o projeto é uma aplicação estática, não é necessário instalar dependências.
 
-### Opção 1 — abrir diretamente
+### Opção 1 — abrir diretamente (pode falhar)
 
-Abra o arquivo `index.html` em um navegador moderno.
+Os scripts usam módulos ES, que não funcionam via `file://` em alguns navegadores; prefira a opção 2.
 
 ### Opção 2 — servidor local
 
