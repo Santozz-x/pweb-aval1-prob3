@@ -58,6 +58,7 @@ input[type='submit'] {
 	cursor: pointer;
 	-webkit-appearance: button;
 	appearance: button;
+	background: transparent;
 }
 
 input[type="checkbox"],

@@ -7,6 +7,14 @@ export const TYPE_LABELS = {
 	agridoce: 'Agridoce',
 };
 
+/**
+ * Busca dados na API de receitas e valida a resposta HTTP e o JSON retornado.
+ *
+ * @param {string} path Caminho e query string do recurso da API.
+ * @returns {Promise<unknown>} Dados decodificados da resposta.
+ * @throws {Error} Quando não é possível conectar, a API responde com erro ou
+ * a resposta não contém JSON válido.
+ */
 async function request(path) {
 	let response;
 	try {
@@ -27,7 +35,20 @@ async function request(path) {
 	}
 }
 
-// Normalizes an API recipe so null/undefined never reach the UI.
+/**
+ * Normaliza uma receita da API para o formato consumido pela interface.
+ *
+ * @param {Object<string, unknown>|null|undefined} raw Receita recebida da API.
+ * @returns {{
+ * 	id: unknown,
+ * 	name: string,
+ * 	image: string,
+ * 	type: string,
+ * 	typeLabel: string,
+ * 	ingredients: string[],
+ * 	steps: string[]
+ * }} Receita normalizada, sem valores nulos para os campos exibidos.
+ */
 export function normalizeRecipe(raw) {
 	const ingredients =
 		typeof raw?.ingredientes === 'string'
@@ -56,6 +77,13 @@ export function normalizeRecipe(raw) {
 	};
 }
 
+/**
+ * Converte uma resposta da API em uma lista de receitas normalizadas.
+ *
+ * @param {unknown} result Resposta da API, como lista ou objeto com `items`.
+ * @returns {Array<ReturnType<typeof normalizeRecipe>>} Receitas normalizadas.
+ * @throws {Error} Quando a resposta não contém uma lista de receitas.
+ */
 function toList(result) {
 	const list = Array.isArray(result) ? result : result?.items;
 	if (!Array.isArray(list)) {
@@ -64,7 +92,16 @@ function toList(result) {
 	return list.map(normalizeRecipe);
 }
 
-// Searches by name/description and/or type. With no filters, lists all.
+/**
+ * Pesquisa receitas por texto, tipo ou ambos os filtros.
+ *
+ * Sem filtros, retorna todas as receitas disponíveis, respeitando o limite
+ * máximo configurado para a API.
+ *
+ * @param {{text?: string, type?: string}} [filters={}] Filtros da pesquisa.
+ * @returns {Promise<Array<ReturnType<typeof normalizeRecipe>>>} Receitas
+ * normalizadas que correspondem aos filtros.
+ */
 export async function searchRecipes({ text = '', type = '' } = {}) {
 	if (text) {
 		const query = new URLSearchParams({
@@ -83,6 +120,14 @@ export async function searchRecipes({ text = '', type = '' } = {}) {
 	return toList(await request(`/receitas/todas?page=1&limit=${MAX_ITEMS}`));
 }
 
+/**
+ * Busca e normaliza uma receita pelo identificador.
+ *
+ * @param {string|number} id Identificador da receita.
+ * @returns {Promise<ReturnType<typeof normalizeRecipe>>} Receita encontrada e
+ * normalizada.
+ * @throws {Error} Quando a receita não existe ou a resposta é inválida.
+ */
 export async function getRecipe(id) {
 	const result = await request(`/receitas/${encodeURIComponent(id)}`);
 	if (!result || typeof result !== 'object' || !result.id) {

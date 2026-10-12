@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Livro de Receitas</title>
-    <meta name="description" content="Pesquise receitas culinárias por nome e tipo e consulte ingredientes e modo de preparo.">
+    <meta name="description"
+        content="Pesquise receitas culinárias por nome e tipo e consulte ingredientes e modo de preparo.">
     <link rel="stylesheet" href="styles/home.css">
     <link rel="icon" href="./assets/icon_142001.svg">
     <script type="module" src="scripts/home.js"></script>
@@ -12,37 +13,29 @@
 <body>
     <header>
         <h1 class="page-title"><a href="index.html">Livro de Receitas</a></h1>
+        <form id="search-form" class="search-form" role="search">
+            <input type="search" name="text" maxlength="60" placeholder="Pesquisa sua receita" />
+            <button type="submit">
+                <img src="./assets/lu-search.svg" />
+            </button>
+        </form>
     </header>
     <div class="header-border"></div>
 
     <main>
-        <form id="search-form" class="search-form" role="search">
-            <div class="field">
-                <label for="search-text">Nome da receita</label>
-                <input id="search-text" type="search" name="text" maxlength="60" placeholder="Ex.: bolo" autocomplete="off">
-            </div>
-            <div class="field">
-                <label for="search-type">Tipo</label>
-                <select id="search-type" name="type">
-                    <option value="">Todos</option>
-                    <option value="doce">Doce</option>
-                    <option value="salgado">Salgado</option>
-                    <option value="agridoce">Agridoce</option>
-                </select>
-            </div>
-            <button type="submit">
-                <img src="./assets/lu-search.svg" alt="" width="20" height="20">
-                Pesquisar
+        <div id="pagination" class="pagination" aria-label="Paginação dos resultados">
+            <button id="prev-button" class="prev-button">
+                <img src="./assets/arrow.png" />
             </button>
-        </form>
 
-        <p id="status" class="status" role="status" aria-live="polite"></p>
-        <ul id="results" class="recipe-list"></ul>
-        <nav id="pagination" class="pagination" aria-label="Paginação dos resultados" hidden>
-            <button id="prev-button" type="button">← Anterior</button>
-            <span id="page-info" aria-live="polite"></span>
-            <button id="next-button" type="button">Próxima →</button>
-        </nav>
+            <div id="page-info" class="page-info"></div>
+
+            <button id="next-button" class="next-button">
+                <img src="./assets/arrow.png" />
+            </button>
+        </div>
+
+        <section id="results" class="recipe-list"></section>
     </main>
 
     <footer>

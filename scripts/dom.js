@@ -11,7 +11,7 @@ export function createElement(tag, className, content) {
 
 const FALLBACK_IMAGE = new URL('../assets/no-image.svg', import.meta.url).href;
 
-export function createRecipeImage(recipe, className) {
+export function getRecipeImage(recipe, className) {
 	const img = createElement('img', className);
 	img.alt = recipe.image
 		? `Foto da receita ${recipe.name}`
