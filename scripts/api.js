@@ -98,11 +98,11 @@ function toList(result) {
  * Sem filtros, retorna todas as receitas disponíveis, respeitando o limite
  * máximo configurado para a API.
  *
- * @param {{text?: string, type?: string}} [filters={}] Filtros da pesquisa.
+ * @param {{text?: string, category?: string}} [filters={}] Filtros da pesquisa.
  * @returns {Promise<Array<ReturnType<typeof normalizeRecipe>>>} Receitas
  * normalizadas que correspondem aos filtros.
  */
-export async function searchRecipes({ text = '', type = '' } = {}) {
+export async function searchRecipes({ text = '', category = '' } = {}) {
 	if (text) {
 		const query = new URLSearchParams({
 			descricao: text,
@@ -110,11 +110,11 @@ export async function searchRecipes({ text = '', type = '' } = {}) {
 			limit: MAX_ITEMS,
 		});
 		const recipes = toList(await request(`/receitas/descricao?${query}`));
-		return type ? recipes.filter(recipe => recipe.type === type) : recipes;
+		return category ? recipes.filter(recipe => recipe.type === category) : recipes;
 	}
 
-	if (type) {
-		return toList(await request(`/receitas/tipo/${encodeURIComponent(type)}`));
+	if (category) {
+		return toList(await request(`/receitas/tipo/${encodeURIComponent(category)}`));
 	}
 
 	return toList(await request(`/receitas/todas?page=1&limit=${MAX_ITEMS}`));

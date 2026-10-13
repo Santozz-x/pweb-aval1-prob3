@@ -5,7 +5,6 @@ const PAGE_SIZE = 12;
 const MAX_TEXT_LENGTH = 60;
 
 const form = $('#search-form');
-const status = $('#status');
 const results = $('#results');
 const pagination = $('#pagination');
 const prevButton = $('#prev-button');
@@ -19,10 +18,7 @@ let currentRequestId = 0;
 form.addEventListener('submit', event => {
 	event.preventDefault();
 	const formData = new FormData(form);
-	search({
-		text: formData.text,
-		type: formData.type,
-	});
+	search(formData.get('text'), formData.get('category'));
 });
 
 prevButton.addEventListener('click', () => goToPage(page - 1));
@@ -30,7 +26,7 @@ nextButton.addEventListener('click', () => goToPage(page + 1));
 
 search();
 
-async function search(text, type) {
+async function search(text, category) {
 	if (text && text.length > MAX_TEXT_LENGTH) {
 		showStatus(
 			`O termo deve ter no máximo ${MAX_TEXT_LENGTH} caracteres.`,
@@ -45,7 +41,7 @@ async function search(text, type) {
 	form.setAttribute('aria-busy', 'true');
 
 	try {
-		const recipes = await searchRecipes({ text, type });
+		const recipes = await searchRecipes({ text, category });
 		if (id !== currentRequestId) return; // a newer search has already started
 
 		currentRecipes = recipes;
@@ -57,7 +53,7 @@ async function search(text, type) {
 			return;
 		}
 
-		if (type) {
+		if (category) {
 			showStatus(
 				`${recipes.length} ${recipes.length === 1 ? 'receita encontrada' : 'receitas encontradas'}.`,
 			);
@@ -98,7 +94,7 @@ function goToPage(newPage, scroll = true) {
 function createRecipeCard(recipe) {
 	const link = createElement('a');
 	link.href = `pages/recipe.html?id=${encodeURIComponent(recipe.id)}`;
-	
+
 	const article = createElement('article', 'recipe');
 	link.append(article);
 
@@ -118,7 +114,16 @@ function createRecipeCard(recipe) {
 }
 
 function showStatus(message, kind = '') {
-	console.log(message + kind);
-	// status.textContent = message;
-	// status.className = `status ${kind}`.trim();
+	if (kind && !['loading', 'error', 'empty'].includes(kind)) return;
+
+	const status = createElement('div', 'status');
+	status.textContent = message;
+
+	results.replaceChildren();
+
+	if (kind === 'loading') {
+		results.append(createElement('div', 'loader'));
+	}
+
+	results.append(status);
 }

@@ -54,17 +54,11 @@ body > header {
 	}
 
 	input,
-	.select {
+	.select-category {
 		padding: 0.5rem;
 		background-color: white;
 		font-size: 12pt;
-	}
-
-	input {
-		&::placeholder {
-			color: var(--color3-lighter);
-		}
-
+		
 		&:focus,
 		&:focus-visible,
 		&:focus-within {
@@ -72,8 +66,20 @@ body > header {
 			outline: none;
 		}
 	}
+	
+	input {
+		&::placeholder {
+			color: var(--color3-lighter);
+		}
+	}
 
-	button {
+	.select-category {
+		border-left: 1px solid var(--color3-lighter);
+
+		
+	}
+
+	button[type="submit"] {
 		background-color: var(--color1);
 		padding: 0.5rem;
 	}
