@@ -1,5 +1,5 @@
 import { getRecipe } from './api.js';
-import { $, createElement, createRecipeImage } from './dom.js';
+import { $, createElement, getRecipeImage } from './dom.js';
 
 const status = $('#status');
 const container = $('#recipe');
@@ -8,6 +8,8 @@ load();
 
 async function load() {
 	const id = new URLSearchParams(location.search).get('id');
+
+	console.log(id);
 
 	if (!/^\d+$/.test(id ?? '')) {
 		showError('Receita inválida. Volte e selecione uma receita.');
@@ -31,7 +33,7 @@ function render(recipe) {
 
 	container.append(createElement('h2', null, recipe.name));
 	if (recipe.typeLabel) container.append(createElement('p', 'tag', `Categoria: ${recipe.typeLabel}`));
-	container.append(createRecipeImage(recipe, 'detail-image'));
+	container.append(getRecipeImage(recipe, 'detail-image'));
 
 	container.append(createElement('h3', null, 'Ingredientes'));
 	if (recipe.ingredients.length) {
