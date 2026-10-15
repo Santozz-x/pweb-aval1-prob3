@@ -74,8 +74,8 @@ Não são utilizados React, Vue, Angular, Svelte, backend próprio, banco de dad
 .
 ├── assets/
 │   ├── icon_142001.svg
-│   ├── no-image.svg
-│   └── lu-search.svg
+│   ├── lu-search.svg
+│   └── no-image.svg
 ├── pages/
 │   └── recipe.html
 ├── scripts/
@@ -87,7 +87,10 @@ Não são utilizados React, Vue, Angular, Svelte, backend próprio, banco de dad
 │   ├── home.css
 │   ├── recipe.css
 │   └── reset.css
+├── .gitignore
 ├── index.html
+├── LICENSE
+├── pweb-aval1-prob03.pdf
 └── README.md
 ```
 
@@ -110,7 +113,7 @@ As consultas assíncronas devem informar ao usuário quando:
 - uma requisição está em andamento;
 - a API retornou receitas;
 - não foram encontrados resultados;
-- o termo de busca é inválido ou está vazio;
+- o termo de busca é inválido (acima de 60 caracteres); com o campo vazio, a aplicação lista todas as receitas;
 - ocorreu uma falha de comunicação ou processamento.
 
 Campos ausentes são tratados antes da renderização para que valores como `null` e `undefined` não sejam apresentados na interface. Quando uma imagem não estiver disponível, a aplicação utiliza uma apresentação alternativa sem quebrar o cartão da receita.
